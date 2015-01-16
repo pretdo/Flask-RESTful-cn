@@ -1,8 +1,7 @@
-User's Guide
+用户指南
 ------------
 
-This part of the documentation will show you how to get started in using
-Flask-RESTful with Flask.
+这部分文档将向你展示如何在 Flask 中使用 Flask-RESTful。
 
 .. toctree::
    :maxdepth: 2
@@ -14,21 +13,20 @@ Flask-RESTful with Flask.
    extending
    intermediate-usage
 
-API Reference
+API 参考
 -------------
 
-If you are looking for information on a specific function, class or
-method, this part of the documentation is for you.
+如果你正在查询特定函数，类或者方法的信息，这部分文档就是为你准备的。
 
 .. toctree::
    :maxdepth: 2
 
    api
 
-Additional Notes
+其它注意事项
 ----------------
 
-See Flask's license_ for legal information governing this project.
+关于这个项目的法律信息请参阅 Flask 的 license_。
 
 .. toctree::
    :maxdepth: 2

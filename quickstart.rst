@@ -1,6 +1,6 @@
 .. _quickstart:
 
-Quickstart
+快速入门
 ==========
 
 .. currentmodule:: flask.ext.restful
@@ -124,8 +124,8 @@ as shown below: ::
             return {'task': 'Hello world'}, 201, {'Etag': 'some-opaque-string'}
 
 
-Endpoints
----------
+端点(Endpoints)
+----------------
 
 Many times in an API, your resource will have multiple URLs. You can pass
 multiple URLs to the :py:meth:`Api.add_resource` method on the Api object. Each one
@@ -140,7 +140,7 @@ You can also match parts of the path as variables to your resource methods. ::
     api.add_resource(Todo,
         '/todo/<int:todo_id>', endpoint='todo_ep')
 
-Argument Parsing
+参数解析
 ----------------
 
 While Flask provides easy access to request data (i.e. querystring or POST
@@ -175,7 +175,7 @@ the request includes arguments your parser does not define.
 
     args = parser.parse_args(strict=True)
 
-Data Formatting
+数据格式化
 ---------------
 
 By default, all fields in your return iterable will be rendered as-is. While
@@ -214,7 +214,7 @@ and generates a URL for that endpoint in the response. Many of the field types
 you need are already included. See the :py:class:`fields` guide for a complete
 list.
 
-Full Example
+完整的例子
 ------------
 
 Save this example in api.py ::

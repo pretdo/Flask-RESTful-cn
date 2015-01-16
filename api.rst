@@ -1,6 +1,6 @@
 .. _api:
 
-API Docs
+API 文档
 ========
 
 .. module:: flask.ext.restful

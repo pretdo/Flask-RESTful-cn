@@ -1,27 +1,24 @@
 .. _installation:
 
-Installation
+安装
 ============
 
 .. currentmodule:: flask.ext.restful
 
-Install Flask-RESTful with ``pip`` ::
+使用 ``pip`` 安装 Flask-RESTful::
 
     pip install flask-restful
 
 
-The development version can be downloaded from `its page at GitHub
-<http://github.com/twilio/flask-restful>`_. ::
+开发的版本可以从 `GitHub 上的页面
+<http://github.com/twilio/flask-restful>`_ 下载 ::
 
     git clone https://github.com/twilio/flask-restful.git
     cd flask-restful
     python setup.py develop
    
+Flask-RESTful 有如下的依赖包(如果你使用 ``pip``，依赖包会自动地安装):
 
-Flask-RESTful has the following dependencies (which will be automatically
-installed if you use ``pip``):
+* `Flask <http://flask.pocoo.org>`_ 版本 0.8 或者更高
 
-
-* `Flask <http://flask.pocoo.org>`_ version 0.8 or greater
-
-Flask-RESTful requires Python version 2.6, 2.7, or 3.3.
+Flask-RESTful 要求 Python 版本为 2.6, 2.7, 或者 3.3。
