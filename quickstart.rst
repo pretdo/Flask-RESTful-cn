@@ -12,8 +12,8 @@ installed both Flask and Flask-RESTful.  If not, then follow the steps in the
 
 
 
-A Minimal API
--------------
+一个最小的 API
+---------------
 
 A minimal Flask-RESTful API looks like this: ::
 
@@ -49,8 +49,8 @@ Now open up a new prompt to test out your API using curl ::
 
 
 
-Resourceful Routing
--------------------
+资源丰富的路由(Resourceful Routing)
+-------------------------------------
 The main building block provided by Flask-RESTful are resources. Resources are
 built on top of `Flask pluggable views <http://flask.pocoo.org/docs/views/>`_,
 giving you easy access to multiple HTTP methods just by defining methods on
