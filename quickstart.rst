@@ -5,17 +5,13 @@
 
 .. currentmodule:: flask.ext.restful
 
-It's time to write your first REST API. This guide assumes you have a working
-understanding of `Flask <http://flask.pocoo.org>`_, and that you have already
-installed both Flask and Flask-RESTful.  If not, then follow the steps in the
-:ref:`installation` section.
-
+是时候编写你第一个 REST API。本指南假设你对 `Flask <http://flask.pocoo.org>`_ 有一定的认识，并且已经安装了 Flask 和 Flask-RESTful。如果还没有安装的话，可以依照 :ref:`installation` 章节的步骤安装。
 
 
 一个最小的 API
 ---------------
 
-A minimal Flask-RESTful API looks like this: ::
+一个最小的 Flask-RESTful API 像这样::
 
     from flask import Flask
     from flask.ext import restful
@@ -33,16 +29,12 @@ A minimal Flask-RESTful API looks like this: ::
         app.run(debug=True)
 
 
-Save this as api.py and run it using your Python interpreter. Note that we've
-enabled `Flask debugging <http://flask.pocoo.org/docs/quickstart/#debug-mode>`_
-mode to provide code reloading and better error messages. Debug mode should
-never be used in a production environment. ::
+把上述代码保存为 api.py 并且在你的 Python 解释器中运行它。需要注意地是我们已经启用了 `Flask 调试 <http://flask.pocoo.org/docs/quickstart/#debug-mode>`_ 模式，这种模式提供了代码的重载以及更好的错误信息。调试模式绝不能在生产环境下使用。 ::
 
     $ python api.py
      * Running on http://127.0.0.1:5000/
 
-
-Now open up a new prompt to test out your API using curl ::
+现在打开一个新的命令行窗口使用 curl 测试你的 API::
 
     $ curl http://127.0.0.1:5000/
     {"hello": "world"}
@@ -51,11 +43,7 @@ Now open up a new prompt to test out your API using curl ::
 
 资源丰富的路由(Resourceful Routing)
 -------------------------------------
-The main building block provided by Flask-RESTful are resources. Resources are
-built on top of `Flask pluggable views <http://flask.pocoo.org/docs/views/>`_,
-giving you easy access to multiple HTTP methods just by defining methods on
-your resource. A basic CRUD resource for a todo application (of course) looks
-like this: ::
+Flask-RESTful 提供的最主要的基础就是资源(resources)。资源(Resources)是构建在 `Flask 可拔插视图 <http://flask.pocoo.org/docs/views/>`_ 之上，只要在你的资源(resource)上定义方法就能够容易地访问多个 HTTP 方法。一个待办事项应用程序的基本的 CRUD 资源看起来像这样: ::
 
     from flask import Flask, request
     from flask.ext.restful import Resource, Api
@@ -78,7 +66,7 @@ like this: ::
     if __name__ == '__main__':
         app.run(debug=True)
 
-You can try it like this: ::
+你可以尝试这样: ::
 
     $ curl http://localhost:5000/todo1 -d "data=Remember the milk" -X PUT
     {"todo1": "Remember the milk"}
@@ -90,7 +78,7 @@ You can try it like this: ::
     {"todo2": "Change my brakepads"}
 
 
-Or from python if you have the requests library installed::
+或者如果你安装了 requests 库的话，可以从 python shell 中运行::
 
      >>> from requests import put, get
      >>> put('http://localhost:5000/todo1', data={'data': 'Remember the milk'}).json()
@@ -102,11 +90,7 @@ Or from python if you have the requests library installed::
      >>> get('http://localhost:5000/todo2').json()
      {u'todo2': u'Change my brakepads'}
 
-Flask-RESTful understands multiple kinds of return values from view methods.
-Similar to Flask, you can return any iterable and it will be converted into a
-response, including raw Flask response objects. Flask-RESTful also support
-setting the response code and response headers using multiple return values,
-as shown below: ::
+Flask-RESTful 支持视图方法多种类型的返回值。同 Flask 一样，你可以返回任一迭代器，它将会被转换成一个包含原始 Flask 响应对象的响应。Flask-RESTful 也支持使用多个返回值来设置响应代码和响应头，如下所示: ::
 
     class Todo1(Resource):
         def get(self):
@@ -127,14 +111,13 @@ as shown below: ::
 端点(Endpoints)
 ----------------
 
-Many times in an API, your resource will have multiple URLs. You can pass
-multiple URLs to the :py:meth:`Api.add_resource` method on the Api object. Each one
-will be routed to your :py:class:`Resource` ::
+很多时候在一个 API 中，你的资源可以通过多个 URLs 访问。你可以把多个 URLs 传给 Api 对象的 :py:meth:`Api.add_resource` 方法。每一个 URL 都能访问到你的 :py:class:`Resource` ::
 
     api.add_resource(HelloWorld,
         '/',
         '/hello')
 
+你也可以
 You can also match parts of the path as variables to your resource methods. ::
 
     api.add_resource(Todo,
