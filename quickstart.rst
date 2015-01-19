@@ -117,8 +117,7 @@ Flask-RESTful 支持视图方法多种类型的返回值。同 Flask 一样，�
         '/',
         '/hello')
 
-你也可以
-You can also match parts of the path as variables to your resource methods. ::
+你也可以为你的资源方法指定 endpoint 参数。 ::
 
     api.add_resource(Todo,
         '/todo/<int:todo_id>', endpoint='todo_ep')
@@ -126,10 +125,7 @@ You can also match parts of the path as variables to your resource methods. ::
 参数解析
 ----------------
 
-While Flask provides easy access to request data (i.e. querystring or POST
-form encoded data), it's still a pain to validate form data. Flask-RESTful
-has built-in support for request data validation using a library similar to
-`argparse <http://docs.python.org/dev/library/argparse.html>`_. ::
+尽管 Flask 能够简单地访问请求数据(比如查询字符串或者 POST 表单编码的数据)，验证表单数据仍然很痛苦。Flask-RESTful 内置了支持验证请求数据，它使用了一个类似 `argparse <http://docs.python.org/dev/library/argparse.html>`_ 的库。 ::
 
     from flask.ext.restful import reqparse
 
@@ -138,35 +134,23 @@ has built-in support for request data validation using a library similar to
     args = parser.parse_args()
 
 
-Note that unlike the argparse module,
-:py:meth:`reqparse.RequestParser.parse_args` returns a Python dictionary
-instead of a custom data structure.
+需要注意地是与 argparse 模块不同，:py:meth:`reqparse.RequestParser.parse_args` 返回一个 Python 字典而不是一个自定义的数据结构。
 
-Using the :py:class:`reqparse` module also gives you sane error messages for
-free. If an argument fails to pass validation, Flask-RESTful will respond with
-a 400 Bad Request and a response highlighting the error. ::
+使用 :py:class:`reqparse` 模块同样可以自由地提供聪明的错误信息。如果参数没有通过验证，Flask-RESTful 将会以一个 400 错误请求以及高亮的错误信息回应。::
 
     $ curl -d 'rate=foo' http://127.0.0.1:5000/
     {'status': 400, 'message': 'foo cannot be converted to int'}
 
+:py:class:`inputs` 模块提供了许多的常见的转换函数，比如 :py:meth:`inputs.date` 和 :py:meth:`inputs.url`。
 
-The :py:class:`inputs` module provides a number of included common conversion
-functions such as :py:meth:`inputs.date` and :py:meth:`inputs.url`.
-
-Calling ``parse_args`` with ``strict=True`` ensures that an error is thrown if
-the request includes arguments your parser does not define.
+使用 ``strict=True`` 调用 ``parse_args`` 能够确保当请求包含你的解析器中未定义的参数的时候会跑抛出一个异常。
 
     args = parser.parse_args(strict=True)
 
 数据格式化
 ---------------
 
-By default, all fields in your return iterable will be rendered as-is. While
-this works great when you're just dealing with Python data structures,
-it can become very frustrating when working with objects. To solve this
-problem, Flask-RESTful provides the :py:class:`fields` module and the
-:py:meth:`marshal_with` decorator. Similar to the Django ORM and WTForm, you
-use the fields module to describe the structure of your response. ::
+默认情况下，在你的返回迭代中所有域将会原样呈现。尽管当你刚刚处理 Python 数据结构的时候，觉得这是一个伟大的工作，但是当实际处理它们的时候，会觉得十分沮丧和枯燥。为了解决这个问题，Flask-RESTful 提供了 :py:class:`fields` 模块和 :py:meth:`marshal_with` 装饰器。类似 Django ORM 和 WTForm，你可以使用 fields 模块来在你的响应中格式化结构。 ::
 
     from collections import OrderedDict
     from flask.ext.restful import fields, marshal_with
