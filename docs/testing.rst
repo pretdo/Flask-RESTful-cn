@@ -3,6 +3,7 @@
 运行测试
 =================
 
+``Makefile`` 是
 A ``Makefile`` is included to take care of setting up a virtualenv for running tests. All you need to do is run::
 
     $ make test
