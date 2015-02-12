@@ -173,18 +173,12 @@ Flask-RESTful 支持视图方法多种类型的返回值。同 Flask 一样，�
         def get(self, **kwargs):
             return TodoDao(todo_id='my_todo', task='Remember the milk')
 
-The above example takes a python object and prepares it to be serialized. The
-:py:meth:`marshal_with` decorator will apply the transformation described by
-``resource_fields``. The only field extracted from the object is ``task``. The
-:py:class:`fields.Url` field is a special field that takes an endpoint name
-and generates a URL for that endpoint in the response. Many of the field types
-you need are already included. See the :py:class:`fields` guide for a complete
-list.
+上面的例子接受一个 python 对象并准备将其序列化。:py:meth:`marshal_with` 装饰器将会应用到由 ``resource_fields`` 描述的转换。从对象中提取的唯一字段是 ``task``。:py:class:`fields.Url` 域是一个特殊的域，它接受端点（endpoint）名称作为参数并且在响应中为该端点生成一个 URL。许多你需要的字段类型都已经包含在内。请参阅 :py:class:`fields` 指南获取一个完整的列表。
 
 完整的例子
 ------------
 
-Save this example in api.py ::
+在 api.py 中保存这个例子 ::
 
     from flask import Flask
     from flask.ext.restful import reqparse, abort, Api, Resource
@@ -250,23 +244,23 @@ Save this example in api.py ::
         app.run(debug=True)
 
 
-Example usage ::
+用法示例 ::
 
     $ python api.py
      * Running on http://127.0.0.1:5000/
      * Restarting with reloader
 
-GET the list ::
+获取列表 ::
 
     $ curl http://localhost:5000/todos
     {"todo1": {"task": "build an API"}, "todo3": {"task": "profit!"}, "todo2": {"task": "?????"}}
 
-GET a single task ::
+获取一个单独的任务 ::
 
     $ curl http://localhost:5000/todos/todo3
     {"task": "profit!"}
 
-DELETE a task ::
+删除一个任务 ::
 
     $ curl http://localhost:5000/todos/todo2 -X DELETE -v
 
@@ -282,7 +276,7 @@ DELETE a task ::
     < Server: Werkzeug/0.8.3 Python/2.7.2
     < Date: Mon, 01 Oct 2012 22:10:32 GMT
 
-Add a new task ::
+增加一个新的任务 ::
 
     $ curl http://localhost:5000/todos -d "task=something new" -X POST -v
 
@@ -303,7 +297,7 @@ Add a new task ::
     * Closing connection #0
     {"task": "something new"}
 
-Update a task ::
+更新一个任务 ::
 
     $ curl http://localhost:5000/todos/todo3 -d "task=something different" -X PUT -v
 
