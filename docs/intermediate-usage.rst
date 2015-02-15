@@ -1,19 +1,16 @@
 .. _intermediate:
 
-Intermediate Usage
+中高级用法
 ==================
 
 .. currentmodule:: flask.ext.restful
 
-This page covers building a slightly more complex Flask-RESTful app
-that will cover out some best practices when setting up a real-world
-Flask-RESTful-based API. The :ref:`quickstart` section is great for
-getting started with your first Flask-RESTful app, so if you're new
-to Flask-RESTful you'd be better off checking that out first. 
+本页涉及构建一个稍微复杂的 Flask-RESTful 应用程序，该应用程序将会覆盖到一些最佳练习当你建立一个真实世界的基于 Flask-RESTful 的 API。:ref:`quickstart` 章节适用于开始你的第一个 Flask-RESTful 应用程序，因此如果你是 Flask-RESTful 的新用户，最好查阅该章节。
 
 
-Project Structure
+项目结构
 -----------------
+
 
 There are many different ways to organize your Flask-RESTful app, but here 
 we'll describe one that scales pretty well with larger apps and maintains
@@ -74,7 +71,7 @@ configures your entire API.
 The things in the common directory are just things you'd want to support
 your resource modules.
 
-Full Parameter Parsing Example
+完整的参数解析示例
 ------------------------------
 
 Elsewhere in the documentation, we've described how to use the reqparse example
