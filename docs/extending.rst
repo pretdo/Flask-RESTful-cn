@@ -143,30 +143,21 @@
     class Resource(restful.Resource):
         method_decorators = [authenticate]   # applies to all inherited resources 
 
-Since Flask-RESTful Resources are actually Flask view objects, you can also
-use standard `flask view decorators <http://flask.pocoo.org/docs/views/#decorating-views>`_.
+由于 Flask-RESTful Resources 实际上是 Flask 视图对象，你也可以使用标准的 `flask 视图装饰器 <http://flask.pocoo.org/docs/views/#decorating-views>`_。
 
 自定义错误处理器
 ---------------------
 
-Error handling is a tricky problem. Your Flask application may be wearing
-multiple hats, yet you want to handle all Flask-RESTful errors with the correct
-content type and error syntax as your 200-level requests.
+错误处理是一个很棘手的问题。你的 Flask 应用可能身兼数职，然而你要以正确的内容类型以及错误语法处理所有的 Flask-RESTful 错误。
 
-Flask-RESTful will call the :meth:`~flask.ext.restful.Api.handle_error`
-function on any 400 or 500 error that happens on a Flask-RESTful route, and
-leave other routes alone. You may want your app to return an error message with
-the correct media type on 404 Not Found errors; in which case, use the
-`catch_all_404s` parameter of the :class:`~flask.ext.restful.Api` constructor. ::
+Flask-RESTful 在 Flask-RESTful 路由上发生任何一个 400 或者 500 错误的时候调用 :meth:`~flask.ext.restful.Api.handle_error` 函数，不会干扰到其它的路由。你可能需要你的应用程序在 404 Not Found 错误上返回一个携带正确媒体类型（介质类型）的错误信息；在这种情况下，使用 :class:`~flask.ext.restful.Api` 构造函数的 `catch_all_404s` 参数。 ::
 
     app = Flask(__name__)
     api = flask_restful.Api(app, catch_all_404s=True)
 
-Then Flask-RESTful will handle 404s in addition to errors on its own routes.
+Flask-RESTful 会处理除了自己路由上的错误还有应用程序上所有的 404 错误。
 
-Sometimes you want to do something special when an error occurs - log to a
-file, send an email, etc. Use the :meth:`~flask.got_request_exception` method
-to attach custom error handlers to an exception. ::
+有时候你想在发生错误的时候做一些特别的东西 - 记录到文件，发送邮件，等等。使用 :meth:`~flask.got_request_exception` 方法把自定义错误处理加入到异常。 ::
 
     def log_exception(sender, exception, **extra):
         """ Log an exception to our logging framework """
@@ -177,9 +168,8 @@ to attach custom error handlers to an exception. ::
 
 定义自定义错误消息
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-You may want to return a specific message and/or status code when certain errors
-are encountered during a request. You can tell Flask-RESTful how you want to handle
-each error/exception so you won't have to fill your API code with try/except blocks. ::
+
+在一个请求期间遇到某些错误的时候，你可能想返回一个特定的消息以及/或者状态码。你可以告诉 Flask-RESTful 你要如何处理每一个错误/异常，因此你不必在你的 API 代码中编写 try/except 代码块。 ::
 
     errors = {
         'UserAlreadyExistsError': {
@@ -193,11 +183,9 @@ each error/exception so you won't have to fill your API code with try/except blo
         },
     }
 
-Including the `'status'` key will set the Response's status code. If not specified
-it will default to 500.
+包含 `'status'` 键可以设置响应的状态码。如果没有指定的话，默认是 500.
 
-Once your `errors` dictionary is defined, simply pass it to the :class:`~flask.ext.restful.Api`
-constructor. ::
+一旦你的 `errors` 字典定义，简单滴把它传给 :class:`~flask.ext.restful.Api` 构造函数。 ::
 
     app = Flask(__name__)
     api = flask_restful.Api(app, errors=errors)
