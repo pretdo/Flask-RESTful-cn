@@ -1,25 +1,17 @@
 .. _extending:
 
-Extending Flask-RESTful
+扩展 Flask-RESTful
 =======================
 
 .. currentmodule:: flask.ext.restful
 
+我们认识到每一个人在 REST 框架上有着不同的需求。Flask-RESTful 试图尽可能的灵活，但是有时候你可能会发现内置的功能不足够满足你的需求。Flask-RESTful 有几个不同的扩展点，这些扩展在这种情况下会有帮助。
 
-We realize that everyone has different needs in a REST framework.
-Flask-RESTful tries to be as flexible as possible, but sometimes you might
-find that the builtin functionality is not enough to meet your needs.
-Flask-RESTful has a few different extension points that can help in that case.
 
-Content Negotiation
+内容协商
 -------------------
 
-Out of the box, Flask-RESTful is only configured to support JSON. We made this
-decision to give API maintainers full control of over API format support, so a
-year down the road you don’t have to support people using the CSV
-representation of your API you didn’t even know existed. To add additional
-mediatypes to your API, you’ll need to declare your supported representations
-on the :class:`~Api` object. ::
+开箱即用，Flask-RESTful 仅配置为支持 JSON。我们做出这个决定是为了给 API 维护者完全控制 API 格式支持，因此一年来的路上，你不必支持那些使用 API 且用 CSV 表示的人们，甚至你都不知道他们的存在。要添加其它的 mediatypes 到你的 API 中，你需要在 :class:`~Api` 对象中声明你支持的表示。 ::
 
     app = Flask(__name__)
     api = restful.Api(app)
@@ -30,22 +22,18 @@ on the :class:`~Api` object. ::
         resp.headers.extend(headers or {})
         return resp
 
-These representation functions must return a Flask :class:`~flask.Response`
-object.
+这些表示函数必须返回一个 Flask :class:`~flask.Response` 对象。
 
 
-Custom Fields & Inputs
+自定义字段 & 输入
 ----------------------
 
-One of the most common additions to Flask-RESTful is to define custom types or
-fields based on the data your own data types.  
+一种最常见的 Flask-RESTful 附件功能就是基于你自己数据类型的数据来定义自定义的类型或者字段。
 
-Fields
+字段
 ~~~~~~
 
-Custom output fields let you perform your own output formatting without having
-to modify your internal objects directly. All you have to do is subclass
-:class:`~fields.Raw` and implement the :meth:`~fields.Raw.format` method::
+自定义输出字段让你无需直接修改内部对象执行自己的输出格式。所有你必须做的就是继承 :class:`~fields.Raw` 并且实现 :meth:`~fields.Raw.format` 方法::
 
     class AllCapsString(fields.Raw):
         def format(self, value):
@@ -58,11 +46,10 @@ to modify your internal objects directly. All you have to do is subclass
         'all_caps_name': AllCapsString(attribute=name),
     }
 
-Inputs
+输入
 ~~~~~~
 
-For parsing arguments, you might want to perform custom validation.  Creating
-your own input types lets you extend request parsing with ease.  ::
+对于解析参数，你可能要执行自定义验证。创建你自己的输入类型让你轻松地扩展请求解析。 ::
 
     def odd_number(value):
         if value % 2 == 0:
@@ -70,8 +57,7 @@ your own input types lets you extend request parsing with ease.  ::
 
         return value
 
-The request parser will also give you access to the name of the argument for cases
-where you want to reference the name in the error message. ::
+请求解析器在你想要在错误消息中引用名称的情况下将也会允许你访问参数的名称。 ::
 
     def odd_number(value, name):
         if value % 2 == 0:
@@ -79,7 +65,7 @@ where you want to reference the name in the error message. ::
 
         return value
 
-You can also convert public parameter values to internal representations: ::
+你还可以将公开的参数转换为内部表示： ::
 
     # maps the strings to their internal integer representation
     # 'init' => 0
@@ -91,7 +77,7 @@ You can also convert public parameter values to internal representations: ::
         return statuses.index(value)
 
 
-Then you can use these custom input type in your RequestParser: ::
+然后你可以在你的 RequestParser 中使用这些自定义输入类型： ::
 
     parser = reqparse.RequestParser()
     parser.add_argument('OddNumber', type=odd_number)
@@ -99,11 +85,10 @@ Then you can use these custom input type in your RequestParser: ::
     args = parser.parse_args()
 
 
-Response Formats
+响应格式
 ----------------
 
-To support other representations (like xml, csv, html) you can use the
-:meth:`~Api.representation` decorator.  You need to have a reference to your API. ::
+为了支持其它的表示（像 XML,CSV,HTML），你可以使用 :meth:`~Api.representation` 装饰器。你需要在你的 API 中引用它。 ::
 
     api = restful.Api(app)
 
@@ -112,12 +97,9 @@ To support other representations (like xml, csv, html) you can use the
         pass
         # implement csv output!
 
-These output functions take three parameters, ``data``, ``code``, and
-``headers``
+这些输出函数有三个参数，``data``，``code``，以及 ``headers``。
 
-``data`` is the object you return from your resource method, code is the HTTP
-status code that it expects, and headers are any HTTP headers to set in the
-response.  Your output function should return a Flask response object. ::
+``data`` 是你从你的资源方法返回的对象，``code`` 是预计的 HTTP 状态码，``headers`` 是设置在响应中任意的 HTTP 头。你的输出函数应该返回一个 Flask 响应对象。 ::
 
     def output_json(data, code, headers=None):
         """Makes a Flask response with a JSON encoded body"""
@@ -126,8 +108,7 @@ response.  Your output function should return a Flask response object. ::
 
         return resp
 
-Another way to accomplish this is to subclass the :class:`~Api` class and
-provide your own output functions. ::
+另外一种实现这一点的就是继承 :class:`~Api` 类并且提供你自己输出函数。 ::
 
     class Api(restful.Api):
         def __init__(self, *args, **kwargs):
@@ -139,13 +120,10 @@ provide your own output functions. ::
                 'application/json': output_json,
             }
 
-Resource Method Decorators
+资源方法装饰器
 --------------------------
 
-There is a property on the :meth:`~flask.ext.restful.Resource` called
-method_decorators.  You can subclass the Resource and add your own decorators
-that will be added to all ``method`` functions in resource.  For instance, if
-you want to build custom authentication into every request. ::
+:meth:`~flask.ext.restful.Resource` 有一个叫做 method_decorators 的属性。你可以继承 Resource 并且添加你自己的装饰器，该装饰器将会被添加到资源里面所有 ``method`` 函数。举例来说，如果你想要为每一个请求建立自定义认证。 ::
 
     def authenticate(func):
         @wraps(func)
@@ -165,30 +143,21 @@ you want to build custom authentication into every request. ::
     class Resource(restful.Resource):
         method_decorators = [authenticate]   # applies to all inherited resources 
 
-Since Flask-RESTful Resources are actually Flask view objects, you can also
-use standard `flask view decorators <http://flask.pocoo.org/docs/views/#decorating-views>`_.
+由于 Flask-RESTful Resources 实际上是 Flask 视图对象，你也可以使用标准的 `flask 视图装饰器 <http://flask.pocoo.org/docs/views/#decorating-views>`_。
 
-Custom Error Handlers
+自定义错误处理器
 ---------------------
 
-Error handling is a tricky problem. Your Flask application may be wearing
-multiple hats, yet you want to handle all Flask-RESTful errors with the correct
-content type and error syntax as your 200-level requests.
+错误处理是一个很棘手的问题。你的 Flask 应用可能身兼数职，然而你要以正确的内容类型以及错误语法处理所有的 Flask-RESTful 错误。
 
-Flask-RESTful will call the :meth:`~flask.ext.restful.Api.handle_error`
-function on any 400 or 500 error that happens on a Flask-RESTful route, and
-leave other routes alone. You may want your app to return an error message with
-the correct media type on 404 Not Found errors; in which case, use the
-`catch_all_404s` parameter of the :class:`~flask.ext.restful.Api` constructor. ::
+Flask-RESTful 在 Flask-RESTful 路由上发生任何一个 400 或者 500 错误的时候调用 :meth:`~flask.ext.restful.Api.handle_error` 函数，不会干扰到其它的路由。你可能需要你的应用程序在 404 Not Found 错误上返回一个携带正确媒体类型（介质类型）的错误信息；在这种情况下，使用 :class:`~flask.ext.restful.Api` 构造函数的 `catch_all_404s` 参数。 ::
 
     app = Flask(__name__)
     api = flask_restful.Api(app, catch_all_404s=True)
 
-Then Flask-RESTful will handle 404s in addition to errors on its own routes.
+Flask-RESTful 会处理除了自己路由上的错误还有应用程序上所有的 404 错误。
 
-Sometimes you want to do something special when an error occurs - log to a
-file, send an email, etc. Use the :meth:`~flask.got_request_exception` method
-to attach custom error handlers to an exception. ::
+有时候你想在发生错误的时候做一些特别的东西 - 记录到文件，发送邮件，等等。使用 :meth:`~flask.got_request_exception` 方法把自定义错误处理加入到异常。 ::
 
     def log_exception(sender, exception, **extra):
         """ Log an exception to our logging framework """
@@ -197,11 +166,10 @@ to attach custom error handlers to an exception. ::
     from flask import got_request_exception
     got_request_exception.connect(log_exception, app)
 
-Define Custom Error Messages
+定义自定义错误消息
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-You may want to return a specific message and/or status code when certain errors
-are encountered during a request. You can tell Flask-RESTful how you want to handle
-each error/exception so you won't have to fill your API code with try/except blocks. ::
+
+在一个请求期间遇到某些错误的时候，你可能想返回一个特定的消息以及/或者状态码。你可以告诉 Flask-RESTful 你要如何处理每一个错误/异常，因此你不必在你的 API 代码中编写 try/except 代码块。 ::
 
     errors = {
         'UserAlreadyExistsError': {
@@ -215,11 +183,9 @@ each error/exception so you won't have to fill your API code with try/except blo
         },
     }
 
-Including the `'status'` key will set the Response's status code. If not specified
-it will default to 500.
+包含 `'status'` 键可以设置响应的状态码。如果没有指定的话，默认是 500.
 
-Once your `errors` dictionary is defined, simply pass it to the :class:`~flask.ext.restful.Api`
-constructor. ::
+一旦你的 `errors` 字典定义，简单地把它传给 :class:`~flask.ext.restful.Api` 构造函数。 ::
 
     app = Flask(__name__)
     api = flask_restful.Api(app, errors=errors)

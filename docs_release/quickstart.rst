@@ -136,21 +136,21 @@ Flask-RESTful 支持视图方法多种类型的返回值。同 Flask 一样，�
 
 需要注意地是与 argparse 模块不同，:py:meth:`reqparse.RequestParser.parse_args` 返回一个 Python 字典而不是一个自定义的数据结构。
 
-使用 :py:class:`reqparse` 模块同样可以自由地提供聪明的错误信息。如果参数没有通过验证，Flask-RESTful 将会以一个 400 错误请求以及高亮的错误信息回应。::
+使用 :py:class:`reqparse` 模块同样可以自由地提供聪明的错误信息。如果参数没有通过验证，Flask-RESTful 将会以一个 400 错误请求以及高亮的错误信息回应。 ::
 
     $ curl -d 'rate=foo' http://127.0.0.1:5000/
     {'status': 400, 'message': 'foo cannot be converted to int'}
 
 :py:class:`inputs` 模块提供了许多的常见的转换函数，比如 :py:meth:`inputs.date` 和 :py:meth:`inputs.url`。
 
-使用 ``strict=True`` 调用 ``parse_args`` 能够确保当请求包含你的解析器中未定义的参数的时候会跑抛出一个异常。
+使用 ``strict=True`` 调用 ``parse_args`` 能够确保当请求包含你的解析器中未定义的参数的时候会抛出一个异常。
 
     args = parser.parse_args(strict=True)
 
 数据格式化
 ---------------
 
-默认情况下，在你的返回迭代中所有域将会原样呈现。尽管当你刚刚处理 Python 数据结构的时候，觉得这是一个伟大的工作，但是当实际处理它们的时候，会觉得十分沮丧和枯燥。为了解决这个问题，Flask-RESTful 提供了 :py:class:`fields` 模块和 :py:meth:`marshal_with` 装饰器。类似 Django ORM 和 WTForm，你可以使用 fields 模块来在你的响应中格式化结构。 ::
+默认情况下，在你的返回迭代中所有字段将会原样呈现。尽管当你刚刚处理 Python 数据结构的时候，觉得这是一个伟大的工作，但是当实际处理它们的时候，会觉得十分沮丧和枯燥。为了解决这个问题，Flask-RESTful 提供了 :py:class:`fields` 模块和 :py:meth:`marshal_with` 装饰器。类似 Django ORM 和 WTForm，你可以使用 fields 模块来在你的响应中格式化结构。 ::
 
     from collections import OrderedDict
     from flask.ext.restful import fields, marshal_with
@@ -173,18 +173,12 @@ Flask-RESTful 支持视图方法多种类型的返回值。同 Flask 一样，�
         def get(self, **kwargs):
             return TodoDao(todo_id='my_todo', task='Remember the milk')
 
-The above example takes a python object and prepares it to be serialized. The
-:py:meth:`marshal_with` decorator will apply the transformation described by
-``resource_fields``. The only field extracted from the object is ``task``. The
-:py:class:`fields.Url` field is a special field that takes an endpoint name
-and generates a URL for that endpoint in the response. Many of the field types
-you need are already included. See the :py:class:`fields` guide for a complete
-list.
+上面的例子接受一个 python 对象并准备将其序列化。:py:meth:`marshal_with` 装饰器将会应用到由 ``resource_fields`` 描述的转换。从对象中提取的唯一字段是 ``task``。:py:class:`fields.Url` 域是一个特殊的域，它接受端点（endpoint）名称作为参数并且在响应中为该端点生成一个 URL。许多你需要的字段类型都已经包含在内。请参阅 :py:class:`fields` 指南获取一个完整的列表。
 
 完整的例子
 ------------
 
-Save this example in api.py ::
+在 api.py 中保存这个例子 ::
 
     from flask import Flask
     from flask.ext.restful import reqparse, abort, Api, Resource
@@ -250,23 +244,23 @@ Save this example in api.py ::
         app.run(debug=True)
 
 
-Example usage ::
+用法示例 ::
 
     $ python api.py
      * Running on http://127.0.0.1:5000/
      * Restarting with reloader
 
-GET the list ::
+获取列表 ::
 
     $ curl http://localhost:5000/todos
     {"todo1": {"task": "build an API"}, "todo3": {"task": "profit!"}, "todo2": {"task": "?????"}}
 
-GET a single task ::
+获取一个单独的任务 ::
 
     $ curl http://localhost:5000/todos/todo3
     {"task": "profit!"}
 
-DELETE a task ::
+删除一个任务 ::
 
     $ curl http://localhost:5000/todos/todo2 -X DELETE -v
 
@@ -282,7 +276,7 @@ DELETE a task ::
     < Server: Werkzeug/0.8.3 Python/2.7.2
     < Date: Mon, 01 Oct 2012 22:10:32 GMT
 
-Add a new task ::
+增加一个新的任务 ::
 
     $ curl http://localhost:5000/todos -d "task=something new" -X POST -v
 
@@ -303,7 +297,7 @@ Add a new task ::
     * Closing connection #0
     {"task": "something new"}
 
-Update a task ::
+更新一个任务 ::
 
     $ curl http://localhost:5000/todos/todo3 -d "task=something different" -X PUT -v
 

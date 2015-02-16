@@ -37,7 +37,7 @@ Flask-RESTful 的请求解析接口是模仿 ``argparse`` 接口。它设计成�
 多个值&列表
 -----------------------
 
-如果你要接受一个键多个值的话，你可以传入 ``action='append'`` ::
+如果你要接受一个键有多个值的话，你可以传入 ``action='append'`` ::
 
     parser.add_argument('name', type=str, action='append')
 
@@ -53,7 +53,7 @@ Flask-RESTful 的请求解析接口是模仿 ``argparse`` 接口。它设计成�
 其它目标（Destinations）
 --------------------------
 
-如果由于某种原因，你想要以不同的名称存储你的参数一旦它被解析，你可以使用 ``dest`` kwarg。 ::
+如果由于某种原因，你想要以不同的名称存储你的参数一旦它被解析的时候，你可以使用 ``dest`` kwarg。 ::
 
     parser.add_argument('name', type=str, dest='public_name')
 
@@ -85,7 +85,7 @@ Flask-RESTful 的请求解析接口是模仿 ``argparse`` 接口。它设计成�
 多个位置
 ------------------
 
-通过传入一个列表到 ``location`` 中可以指定**多个**参数位置::
+通过传入一个列表到 ``location`` 中可以指定 **多个** 参数位置::
 
     parser.add_argument('text', location=['headers', 'values'])
 

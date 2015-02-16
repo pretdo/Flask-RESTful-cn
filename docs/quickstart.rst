@@ -136,21 +136,21 @@ Flask-RESTful 支持视图方法多种类型的返回值。同 Flask 一样，�
 
 需要注意地是与 argparse 模块不同，:py:meth:`reqparse.RequestParser.parse_args` 返回一个 Python 字典而不是一个自定义的数据结构。
 
-使用 :py:class:`reqparse` 模块同样可以自由地提供聪明的错误信息。如果参数没有通过验证，Flask-RESTful 将会以一个 400 错误请求以及高亮的错误信息回应。::
+使用 :py:class:`reqparse` 模块同样可以自由地提供聪明的错误信息。如果参数没有通过验证，Flask-RESTful 将会以一个 400 错误请求以及高亮的错误信息回应。 ::
 
     $ curl -d 'rate=foo' http://127.0.0.1:5000/
     {'status': 400, 'message': 'foo cannot be converted to int'}
 
 :py:class:`inputs` 模块提供了许多的常见的转换函数，比如 :py:meth:`inputs.date` 和 :py:meth:`inputs.url`。
 
-使用 ``strict=True`` 调用 ``parse_args`` 能够确保当请求包含你的解析器中未定义的参数的时候会跑抛出一个异常。
+使用 ``strict=True`` 调用 ``parse_args`` 能够确保当请求包含你的解析器中未定义的参数的时候会抛出一个异常。
 
     args = parser.parse_args(strict=True)
 
 数据格式化
 ---------------
 
-默认情况下，在你的返回迭代中所有域将会原样呈现。尽管当你刚刚处理 Python 数据结构的时候，觉得这是一个伟大的工作，但是当实际处理它们的时候，会觉得十分沮丧和枯燥。为了解决这个问题，Flask-RESTful 提供了 :py:class:`fields` 模块和 :py:meth:`marshal_with` 装饰器。类似 Django ORM 和 WTForm，你可以使用 fields 模块来在你的响应中格式化结构。 ::
+默认情况下，在你的返回迭代中所有字段将会原样呈现。尽管当你刚刚处理 Python 数据结构的时候，觉得这是一个伟大的工作，但是当实际处理它们的时候，会觉得十分沮丧和枯燥。为了解决这个问题，Flask-RESTful 提供了 :py:class:`fields` 模块和 :py:meth:`marshal_with` 装饰器。类似 Django ORM 和 WTForm，你可以使用 fields 模块来在你的响应中格式化结构。 ::
 
     from collections import OrderedDict
     from flask.ext.restful import fields, marshal_with

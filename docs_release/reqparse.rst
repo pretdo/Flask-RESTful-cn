@@ -1,20 +1,16 @@
 .. _reqparse:
 
-Request Parsing
+请求解析
 ===============
 
 .. currentmodule:: flask.ext.restful
 
-Flask-RESTful's request parsing interface is modeled after the ``argparse``
-interface.  It's designed to provide simple and uniform access to any
-variable on the :py:class:`flask.request` object in Flask.
+Flask-RESTful 的请求解析接口是模仿 ``argparse`` 接口。它设计成提供简单并且统一的访问 Flask 中 :py:class:`flask.request` 对象里的任何变量的入口。
 
-Basic Arguments
+基本参数
 ---------------
 
-Here's a simple example of the request parser. It looks for two arguments in
-the :py:attr:`flask.Request.values` dict. One of type ``int``, and the other of
-type ``str`` ::
+这里是请求解析一个简单的例子。它寻找在 :py:attr:`flask.Request.values` 字典里的两个参数。一个类型为 ``int``，另一个的类型是 ``str`` ::
 
     from flask.ext.restful import reqparse
 
@@ -23,63 +19,53 @@ type ``str`` ::
     parser.add_argument('name', type=str)
     args = parser.parse_args()
 
-If you specify the help value, it will be rendered as the error message
-when a type error is raised while parsing it.  If you do not
-specify a help message, the default behavior is to return the message from the
-type error itself.
+如果你指定了 help 参数的值，在解析的时候当类型错误被触发的时候，它将会被作为错误信息给呈现出来。如果你没有指定 help 信息的话，默认行为是返回类型错误本身的信息。
 
-By default, arguments are **not** required.  Also, arguments supplied in the
-request that are not part of the RequestParser will be ignored.
 
-Also note: Arguments declared in your request parser but not set in
-the request itself will default to ``None``.
+默认下，arguments **不是** 必须的。另外，在请求中提供的参数不属于 RequestParser 的一部分的话将会被忽略。
 
-Required Arguments
+另请注意：在请求解析中声明的参数如果没有在请求本身设置的话将默认为 ``None``。
+
+必需的参数
 ------------------
 
-To require a value be passed for an argument, just add ``required=True`` to
-the call to :py:meth:`~reqparse.RequestParser.add_argument`. ::
+要求一个值传递的参数，只需要添加 ``required=True`` 来调用 :py:meth:`~reqparse.RequestParser.add_argument`。 ::
 
     parser.add_argument('name', type=str, required=True,
     help="Name cannot be blank!")
 
-Multiple Values & Lists
+多个值&列表
 -----------------------
 
-If you want to accept multiple values for a key as a list, you can pass
-``action='append'`` ::
+如果你要接受一个键有多个值的话，你可以传入 ``action='append'`` ::
 
     parser.add_argument('name', type=str, action='append')
 
-This will let you make queries like ::
+这将让你做出这样的查询 ::
 
     curl http://api.example.com -d "Name=bob" -d "Name=sue" -d "Name=joe"
 
-And your args will look like this ::
+你的参数将会像这样 ::
 
     args = parser.parse_args()
     args['name']    # ['bob', 'sue', 'joe']
 
-Other Destinations
-------------------
+其它目标（Destinations）
+--------------------------
 
-If for some reason you'd like your argument stored under a different name once
-it's parsed, you can use the ``dest`` kwarg. ::
+如果由于某种原因，你想要以不同的名称存储你的参数一旦它被解析的时候，你可以使用 ``dest`` kwarg。 ::
 
     parser.add_argument('name', type=str, dest='public_name')
 
     args = parser.parse_args()
     args['public_name']
 
-Argument Locations
+参数位置
 ------------------
 
-By default, the :py:class:`~reqparse.RequestParser` tries to parse values
-from :py:attr:`flask.Request.values`, and :py:attr:`flask.Request.json`.
+默认下，:py:class:`~reqparse.RequestParser` 试着从 :py:attr:`flask.Request.values`，以及 :py:attr:`flask.Request.json` 解析值。
 
-Use the ``location`` argument to :py:meth:`~reqparse.RequestParser.add_argument`
-to specify alternate locations to pull the values from. Any variable on the
-:py:class:`flask.Request` can be used. For example: ::
+在 :py:meth:`~reqparse.RequestParser.add_argument` 中使用 ``location`` 参数可以指定解析参数的位置。:py:class:`flask.Request` 中任何变量都能被使用。例如： ::
 
     # Look only in the POST body
     parser.add_argument('name', type=int, location='form')
@@ -96,26 +82,20 @@ to specify alternate locations to pull the values from. Any variable on the
     # From file uploads
     parser.add_argument('picture', type=werkzeug.datastructures.FileStorage, location='files')
 
-Multiple Locations
+多个位置
 ------------------
 
-Multiple argument locations can be specified by passing a list to ``location``::
+通过传入一个列表到 ``location`` 中可以指定 **多个** 参数位置::
 
     parser.add_argument('text', location=['headers', 'values'])
 
-The last location listed takes precedence in the result set.
+列表中最后一个优先出现在结果集中。（例如：location=['headers', 'values']，解析后 'values' 的结果会在 'headers' 前面）
 
-Parser Inheritance
+继承解析
 ------------------
 
-Often you will make a different parser for each resource you write.
-The problem with this is if parsers have arguments in common. Instead of
-rewriting arguments you can write a parent parser containing all the
-shared arguments and then extend the parser with
-:py:meth:`~reqparse.RequestParser.copy`. You can also overwrite any argument
-in the parent with :py:meth:`~reqparse.RequestParser.replace_argument`, or remove
-it completely with :py:meth:`~reqparse.RequestParser.remove_argument`.
-For example: ::
+往往你会为你编写的每个资源编写不同的解析器。这样做的问题就是如果解析器具有共同的参数。不是重写，你可以编写一个包含所有共享参数的父解析器接着使用 :py:meth:`~reqparse.RequestParser.copy` 扩充它。你也可以使用 :py:meth:`~reqparse.RequestParser.replace_argument` 覆盖父级的任何参数，或者使用 :py:meth:`~reqparse.RequestParser.remove_argument` 完全删除参数。
+例如： ::
 
     from flask.ext.restful import RequestParser
 

@@ -88,7 +88,7 @@
 响应格式
 ----------------
 
-为了支持其它的表示（像 XML,CSV,HTML），你可以使用 :meth:`~Api.representation` 装饰器。你需要在你的 API 中引用它。::
+为了支持其它的表示（像 XML,CSV,HTML），你可以使用 :meth:`~Api.representation` 装饰器。你需要在你的 API 中引用它。 ::
 
     api = restful.Api(app)
 
@@ -185,7 +185,7 @@ Flask-RESTful 会处理除了自己路由上的错误还有应用程序上所有
 
 包含 `'status'` 键可以设置响应的状态码。如果没有指定的话，默认是 500.
 
-一旦你的 `errors` 字典定义，简单滴把它传给 :class:`~flask.ext.restful.Api` 构造函数。 ::
+一旦你的 `errors` 字典定义，简单地把它传给 :class:`~flask.ext.restful.Api` 构造函数。 ::
 
     app = Flask(__name__)
     api = flask_restful.Api(app, errors=errors)

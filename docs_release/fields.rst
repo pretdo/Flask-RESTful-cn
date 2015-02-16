@@ -1,28 +1,19 @@
 .. _fields:
 
-Output Fields
+输出字段
 ===============
 
 .. currentmodule:: flask.ext.restful
 
+Flask-RESTful 提供了一个简单的方式来控制在你的响应中实际呈现什么数据。使用 ``fields`` 模块，你可以使用在你的资源里的任意对象（ORM 模型、定制的类等等）并且 ``fields`` 让你格式化和过滤响应，因此您不必担心暴露内部数据结构。
 
-Flask-RESTful provides an easy way to control what data you actually render in
-your response.  With the ``fields`` module, you can use whatever objects (ORM
-models/custom classes/etc) you want in your resource and ``fields`` lets you
-format and filter the response so you don't have to worry about exposing 
-internal data structures.
-
-It's also very clear when looking at your code what data will be rendered and
-how it will be formatted.
+当查询你的代码的时候，哪些数据会被呈现以及它们如何被格式化是很清楚的。
 
 
-Basic Usage
+基本用法
 -----------
-You can define a dict or OrderedDict of fields whose keys are names of
-attributes or keys on the object to render, and whose values are a class that
-will format & return the value for that field.  This example has three fields,
-two are Strings and one is a DateTime, formatted as RFC 822 date string (ISO 8601
-is supported as well) ::
+
+你可以定义一个字典或者 ``fields`` 的 OrderedDict 类型，OrderedDict 类型是指键名是要呈现的对象的属性或键的名称，键值是一个类，该类格式化和返回的该字段的值。这个例子有三个字段，两个是字符串（Strings）以及一个是日期时间（DateTime），格式为 RFC 822 日期字符串（同样也支持 ISO 8601） ::
 
     from flask.ext.restful import Resource, fields, marshal_with
 
@@ -37,33 +28,24 @@ is supported as well) ::
         def get(self, **kwargs):
             return db_get_todo()  # Some function that queries the db
 
+这个例子假设你有一个自定义的数据库对象（``todo``），它具有属性：``name``， ``address``， 以及 ``date_updated``。该对象上任何其它的属性可以被认为是私有的不会在输出中呈现出来。一个可选的 ``envelope`` 关键字参数被指定为封装结果输出。
 
-This example assumes that you have a custom database object (``todo``) that
-has attributes ``name``, ``address``, and ``date_updated``.  Any additional
-attributes on the object are considered private and won't be rendered in the
-output. An optional ``envelope`` keyword argument is specified to wrap the
-resulting output.
+装饰器 ``marshal_with`` 是真正接受你的数据对象并且过滤字段。``marshal_with`` 能够在单个对象，字典，或者列表对象上工作。
 
-The decorator ``marshal_with`` is what actually takes your data object and applies the
-field filtering.  The marshalling can work on single objects, dicts, or
-lists of objects.
-
-Note: marshal_with is a convenience decorator, that is functionally equivalent to the following ``return marshal(db_get_todo(), resource_fields), 200``.
-This explicit expression can be used to return other HTTP status codes than 200 along with a successful response (see ``abort`` for errors).
+注意：marshal_with 是一个很便捷的装饰器，在功能上等效于如下的 ``return marshal(db_get_todo(), resource_fields), 200``。这个明确的表达式能用于返回 200 以及其它的 HTTP 状态码作为成功响应（错误响应见 ``abort``）。
 
 
-Renaming Attributes
+重命名属性
 -------------------
 
-Often times your public facing field name is different from your internal
-attribute naming. To configure this mapping, use the ``attribute`` kwarg. ::
+很多时候你面向公众的字段名称是不同于内部的属性名。使用 ``attribute`` 可以配置这种映射。 ::
 
     fields = {
         'name': fields.String(attribute='private_name'),
         'address': fields.String,
     }
 
-A lambda can also be specified as the ``attribute`` ::
+lambda 也能在 ``attribute`` 中使用 ::
 
     fields = {
         'name': fields.String(attribute=lambda x: x._private_name),
@@ -71,11 +53,10 @@ A lambda can also be specified as the ``attribute`` ::
     }
 
 
-Default Values
+默认值
 --------------
 
-If for some reason your data object doesn't have an attribute in your fields
-list, you can specify a default value to return instead of ``None``. ::
+如果由于某种原因你的数据对象中并没有你定义的字段列表中的属性，你可以指定一个默认值而不是返回 ``None``。 ::
 
     fields = {
         'name': fields.String(default='Anonymous User'),
@@ -83,20 +64,12 @@ list, you can specify a default value to return instead of ``None``. ::
     }
 
 
-Custom Fields & Multiple Values
+自定义字段&多个值
 -------------------------------
 
-Sometimes you have your own custom formatting needs.  You can subclass the
-``fields.Raw`` class and implement the format function.  This is especially useful
-when an attribute stores multiple pieces of information.  e.g. - a
-bit-field whose individual bits represent distinct values.  You can use fields
-to multiplex a single attribute to multiple output values.
+有时候你有你自己定义格式的需求。你可以继承 ``fields.Raw`` 类并且实现格式化函数。当一个属性存储多条信息的时候是特别有用的。例如，一个位域（bit-field）各位代表不同的值。你可以使用 ``fields`` 复用一个单一的属性到多个输出值（一个属性在不同情况下输出不同的结果）。
 
-
-This example assumes that bit 1 in the ``flags`` attribute signifies a
-"Normal" or "Urgent" item, and bit 2 signifies "Read" vs "Unread".  These
-items might be easy to store in a bitfield, but for human readable output it's
-nice to convert them to seperate string fields. ::
+这个例子假设在 ``flags`` 属性的第一位标志着一个“正常”或者“迫切”项，第二位标志着“读”与“未读”。这些项可能很容易存储在一个位字段，但是可读性不高。转换它们使得具有良好的可读性是很容易的。 ::
 
     class UrgentItem(fields.Raw):
         def format(self, value):
@@ -112,13 +85,10 @@ nice to convert them to seperate string fields. ::
         'status': UnreadItem(attribute='flags'),
     }
 
-Url & Other Concrete Fields
+Url & 其它具体字段
 ---------------------------
 
-Flask-RESTful includes a special field, ``fields.Url``, that synthesizes a
-uri for the resource that's being requested.  This is also a good
-example of how to add data to your response that's not actually present on
-your data object. ::
+Flask-RESTful 包含一个特别的字段，``fields.Url``，即为所请求的资源合成一个 uri。这也是一个好示例，它展示了如何添加并不真正在你的数据对象中存在的数据到你的响应中。 ::
 
     class RandomNumber(fields.Raw):
         def output(self, key, obj):
@@ -132,19 +102,17 @@ your data object. ::
     }
 
 
-By default ``fields.Url`` returns a relative uri. To generate an absolute uri that includes
-the scheme, hostname and port pass ``absolute=True`` in the field declaration. To override
-the default scheme, pass the ``scheme`` keyword argument::
+默认情况下，``fields.Url`` 返回一个相对的 uri。为了生成包含协议（scheme），主机名以及端口的绝对 uri，需要在字段声明的时候传入 ``absolute=True``。传入 ``scheme`` 关键字参数可以覆盖默认的协议（scheme）::
 
     fields = {
         'uri': fields.Url('todo_resource', absolute=True)
         'https_uri': fields.Url('todo_resource', absolute=True, scheme='https')
     }
 
-Complex Structures
+复杂结构
 ------------------
 
-You can have a flat structure that marshal_with will transform to a nested structure ::
+你可以有一个扁平的结构，marshal_with 将会把它转变为一个嵌套结构 ::
 
     >>> from flask.ext.restful import fields, marshal
     >>> import json
@@ -160,16 +128,14 @@ You can have a flat structure that marshal_with will transform to a nested struc
     >>> json.dumps(marshal(data, resource_fields))
     '{"name": "bob", "address": {"line 1": "123 fake street", "line 2": "", "state": "NY", "zip": "10468", "city": "New York"}}'
 
-Note: the address field doesn't actually exist on the data object, but any of
-the sub-fields can access attributes directly of the object as if they were
-not nested.
+注意：address 字段并不真正地存在于数据对象中，但是任何一个子字段（sub-fields）可以直接地访问对象的属性，就像没有嵌套一样。
 
 .. _list-field:
 
-List Field
+列表字段
 ----------
 
-You can also unmarshal fields as lists ::
+你也可以把字段解组（unmarshal）成列表 ::
 
     >>> from flask.ext.restful import fields, marshal
     >>> import json
@@ -181,12 +147,10 @@ You can also unmarshal fields as lists ::
 
 .. _nested-field:
 
-Advanced : Nested Field
+高级：嵌套字段
 -----------------------
 
-While nesting fields using dicts can turn a flat data object into a nested
-response, you can use ``Nested`` to unmarshal nested data
-structures and render them appropriately. ::
+尽管使用字典套入字段能够使得一个扁平的数据对象变成一个嵌套的响应，你可以使用 ``Nested`` 解组（unmarshal）嵌套数据结构并且合适地呈现它们。 ::
 
     >>> from flask.ext.restful import fields, marshal
     >>> import json
@@ -209,11 +173,4 @@ structures and render them appropriately. ::
     >>> json.dumps(marshal_with(data, resource_fields))
     '{"billing_address": {"line 1": "123 fake street", "line 2": null, "state": "NY", "zip": "10468", "city": "New York"}, "name": "bob", "shipping_address": {"line 1": "555 nowhere", "line 2": null, "state": "NY", "zip": "10468", "city": "New York"}}'
 
-This example uses two Nested fields.  The ``Nested`` constructor takes a dict of
-fields to render as sub-fields.  The important difference when using ``Nested``
-vs nested dicts as the previous example is the context for attributes.  In
-this example "billing_address" is a complex object that has it's own fields,
-the contexted passed to the nested field is the sub-object instead of the
-original "data" object.  In other words:  ``data.billing_address.addr1`` is in
-scope here, whereas in the previous example ``data.addr1`` was the location
-attribute.  Remember: Nested and List objects create a new scope for attributes.
+此示例使用两个嵌套字段。``Nested`` 构造函数把字段的字典作为子字段（sub-fields）来呈现。使用 ``Nested`` 和之前例子中的嵌套字典之间的重要区别就是属性的上下文。在本例中 "billing_address" 是一个具有自己字段的复杂的对象，传递给嵌套字段的上下文是子对象（sub-object），而不是原来的“数据”对象。换句话说，``data.billing_address.addr1`` 是在这里的范围（译者：这里是直译），然而在之前例子中的 ``data.addr1`` 是位置属性。记住：嵌套和列表对象创建一个新属性的范围。
